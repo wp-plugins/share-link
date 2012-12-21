@@ -50,6 +50,10 @@ Visit the [Share Link Website](http://sharelink.com.au/ "Share Link") and contac
 
 == Changelog ==
 
+= 1.1 =
+* Modified pagination code to be more flexible with Wordpress URLs
+* Added screenshots to Wordpress plugin page 
+
 = 1.0 =
 * Initial release
 
