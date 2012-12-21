@@ -1,0 +1,106 @@
+
+/*-------------------------------------------
+FORM
+-------------------------------------------*/
+
+/*TEXT*/
+.sharelink h2 {
+    vertical-align: top;
+    padding-bottom: 20px;
+}
+.sharelink h2 img { vertical-align: top; }
+
+.form-header {margin-bottom:30px;}
+
+/*FORM*/
+.sharelink form { margin-bottom: 10px; }
+.sharelink form br { clear:left; }
+
+.sharelink form span {
+    display: block;
+    float: left;   
+	padding:5px 10px;
+	font-style:italic;
+}
+
+.sharelink form select {
+    padding: 5px;
+    margin-top: 6px;
+}
+
+.sharelink fieldset {
+	padding: 20px;
+    border: 1px solid #cfcfcf;
+    margin-bottom: 20px;
+    line-height: 1.5;
+	border-color: #DFDFDF;
+	background-color:#F9F9F9;
+	-moz-box-shadow: inset 0 1px 0 #fff;
+	-webkit-box-shadow: inset 0 1px 0 white;
+	box-shadow: inset 0 1px 0 white;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.sharelink fieldset span { display: inline-block; }
+.sharelink fieldset legend { font-size: 13pt; }
+
+.sharelink label {
+	display: block;
+	font-weight: bold;
+	font-size: 13px;
+	line-height:normal;
+	width:180px;
+	float:left;
+	padding:5px 10px 5px 0;
+}
+.sharelink label span,
+.sharelink legend span {
+	font-weight: normal;
+	font-size: 13px;
+	color: #444;
+	line-height:20px;
+}
+
+.sharelink input[type="text"],
+.sharelink input[type="password"],
+.sharelink input[type="email"],
+.sharelink textarea,
+.sharelink select {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	border: 1px solid #DFDFDF;
+	padding: 4px 4px;
+	outline: none;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	color: #777;
+	margin: 0;
+	width: 210px;
+	max-width: 100%;
+	display: block;
+	margin-bottom: 10px;
+	background: #fff;
+	float:left;
+}
+
+.sharelink input[type="text"]:focus,
+.sharelink input[type="password"]:focus,
+.sharelink input[type="email"]:focus,
+.sharelink textarea:focus {
+	border: 1px solid #aaa;
+	color: #444;
+	-moz-box-shadow: 0 0 3px rgba(0,0,0,.2);
+	-webkit-box-shadow: 0 0 3px rgba(0,0,0,.2);
+	box-shadow:  0 0 3px rgba(0,0,0,.2);
+}
+
+.sharelink textarea {min-height: 60px; }
+
+.sharelink input[type="checkbox"] {display: inline;}
+
+.sharelink .error {
+	float:left;
+	padding:5px 10px;
+}
+
