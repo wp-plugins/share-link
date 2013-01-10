@@ -5,7 +5,7 @@
   Plugin URI: http://www.sharelink.com.au
   Description: Share Link wordpress plugin
   Author: Harmonic New Media
-  Version: 1.1
+  Version: 1.1.2
   Author URI: http://www.harmonicnewmedia.com
  */
 
@@ -23,10 +23,7 @@ $source = "http://data.sharelink.com.au/";
  */
 function installShareLink() {
     global $wpdb;
-    mysql_query("drop table ".$wpdb->prefix."sharelink_settings");
-    mysql_query("drop table ".$wpdb->prefix."sharelink_options");
-    mysql_query("drop table ".$wpdb->prefix."sharelink");
-    
+        
     $settings_table = "create table if not exists " . $wpdb->prefix . "sharelink_settings (id int not null auto_increment, stock char(3), license char(32), level char(10), status int, primary key(id))";
     $options_table = "create table if not exists " . $wpdb->prefix . "sharelink_options (id int not null auto_increment, widgetlimit int, widgetdate char(10), byyear int, bymonth int, dateformat varchar(20), pagination int, perpage int, monthheader varchar(20), display int, primary key(id))";
     $documents_table = "create table if not exists " . $wpdb->prefix . "sharelink (id int not null auto_increment, date datetime, title varchar(200), file varchar(200), primary key(id))";
@@ -34,6 +31,8 @@ function installShareLink() {
     mysql_query($settings_table);
     mysql_query($options_table);
     mysql_query($documents_table);
+    
+    mkdir(WP_CONTENT_DIR."/sharelink",0755);
 }
 
 register_activation_hook(__FILE__, 'installShareLink');
