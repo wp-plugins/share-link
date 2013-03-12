@@ -175,12 +175,12 @@ function renderList($options) {
 
     $get = mysql_query("select * from " . $wpdb->prefix . "sharelink " . $year_limit . " order by date desc" . getLimits($options["pagination"], $options["perpage"]));
 
-    if (isset($options["bymonth"])) {
+    if (isset($options["bymonth"]) && $options["bymonth"]!=0) {
         $month = "";
     }
     
     while ($result = mysql_fetch_array($get)) {
-        if (isset($options["bymonth"])) {
+        if (isset($options["bymonth"]) && $options["bymonth"]!=0) {
            $current = date($options["monthheader"], strtotime($result["date"]));
            
            if ($current != $month) {
@@ -248,11 +248,15 @@ function renderByYear() {
 function renderPagination($total, $page, $byyear) {
    $pages = $total / $page;
 
+   $sep = "?"; // default separator is a question mark for first page by default
+
     if (strpos($pages, ".") !== false) {
         list($pages, $float) = explode(".", $pages);
         $pages = $pages + 1;
     }
 
+    // Remove a trailing slash as it confuses this code (added by Craig)
+    $_SERVER["REQUEST_URI"] = rtrim($_SERVER["REQUEST_URI"], '/');
 
     if (strpos($_SERVER["REQUEST_URI"], "?section=") !== false) {
         $start = 0;
@@ -308,7 +312,7 @@ function renderPagination($total, $page, $byyear) {
     $start = 0;
     $content .= "<div class=\"sl-pagination\">";
     while ($start < $pages) {
-        $content .= "<a href=\"" . $_SERVER["REQUEST_URI"] . "" . $sep . "&section=" . ($start + 1) . "" . $yr . "\">" . ($start + 1) . "</a> &nbsp;";
+        $content .= "<a href=\"" . $_SERVER["REQUEST_URI"] . "" . $sep . "section=" . ($start + 1) . "" . $yr . "\">" . ($start + 1) . "</a> &nbsp;";
         $start++;
     }
     $content .= "</div>";
