@@ -3,7 +3,7 @@
     <div class="clear"></div>
     <?php
         global $wpdb;
-        
+
         if (isset($_POST["update"])) {
             $display = $_POST["display"];
             $dateformat = $_POST["dateformat"];
@@ -14,7 +14,7 @@
             $perpage = $_POST["perpage"];
             $widgetdate = $_POST["widgetdate"];
             $widgetlimit = $_POST["widgetlimit"];
-            
+
             $check = mysql_query("select * from ".$wpdb->prefix."sharelink_options");
 	    $result = mysql_num_rows($check);
             if ($result == 0) {
@@ -23,33 +23,33 @@
             mysql_query("update ".$wpdb->prefix."sharelink_options set widgetlimit = '".$widgetlimit."', widgetdate = '".$widgetdate."', byyear = '".$byyear."', dateformat = '".$dateformat."', bymonth = '".$bymonth."', display = '".$display."', monthheader = '".$monthheader."', perpage = '".$perpage."', pagination = '".$pagination."'");
 
 echo mysql_error();
-            
+
             echo "<div class=\"updated\">Settings have been saved</div>";
         }
-        
+
         $get = mysql_query("select * from ".$wpdb->prefix."sharelink_options limit 1");
         $num = mysql_num_rows($get);
-        
+
         if ($num == 0) {
-            mysql_query("insert into ".$wbdb->prefix."sharelink_options (widgetlimit,widgetdate,byyear,bymonth,display,pagination,monthheader,dateformat,perpage) values (3,'d/m/Y',0,0,0,0,0,'d/m/Y',10)");
+            mysql_query("insert into ".$wpdb->prefix."sharelink_options (widgetlimit,widgetdate,byyear,bymonth,display,pagination,monthheader,dateformat,perpage) values (3,'d/m/Y',0,0,0,0,0,'d/m/Y',10)");
             $get = mysql_query("select * from ".$wpdb->prefix."sharelink_options limit 1");
         }
-        
+
         $result = mysql_fetch_array($get);
-        
+
     ?>
 
     <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
         <input type="hidden" name="update" />
-        
+
         <?php if (!is_writable(WP_CONTENT_DIR)) { ?>
             <div class="error">Wordpress Content directory is not writable</div>
         <?php } ?>
-        
+
         <?php if (!is_writable(WP_CONTENT_DIR."/sharelink")) { ?>
             <div class="error">Sharelink Content directory is not writable</div>
         <?php } ?>
-            
+
         <fieldset>
             <legend>Display Settings</legend>
 
@@ -61,7 +61,7 @@ echo mysql_error();
             <select name="display" size="1">
                 <option value="0" <?php if ($result["display"] == 0) { ?>selected="selected"<?php } ?>>Table Structure</option>
                 <option value="1" <?php if ($result["display"] == 1) { ?>selected="selected"<?php } ?>>Unordered List</option>
-                
+
             </select> <span>Should the ASX announcements be display in a table or unordered list?</span><br />
 
             <label>Date Format</label>
@@ -74,7 +74,7 @@ echo mysql_error();
                 <option value="jS M Y" <?php if ($result["dateformat"] == "jS M Y") { ?>selected="selected"<?php } ?>><?php echo date("jS M Y"); ?></option>
                 <option value="l, jS F Y" <?php if ($result["dateformat"] == "l, jS F Y") { ?>selected="selected"<?php } ?>><?php echo date("l, jS F Y"); ?></option>
             </select><br />
-            
+
             <label>Widget Date Format</label>
             <select name="widgetdate" size="1">
                 <option value="d/m/Y" <?php if ($result["widgetdate"] == "d/m/Y") { ?>selected="selected"<?php } ?>><?php echo date("d/m/Y"); ?></option>
@@ -106,7 +106,7 @@ echo mysql_error();
                 <option value="F" <?php if ($result["monthheader"] == "F") { ?>selected="selected"<?php } ?>><?php echo date("F"); ?></option>
                 <option value="M" <?php if ($result["monthheader"] == "M") { ?>selected="selected"<?php } ?>><?php echo date("M"); ?></option>
             </select><br />
-            
+
             <label>Include Pagination</label>
             <select name="pagination" size="1">
                 <option value="0" <?php if ($result["pagination"] == 0) { ?>selected="selected"<?php } ?>>No</option>
@@ -115,13 +115,13 @@ echo mysql_error();
 
             <label>Announcements Per Page</label>
             <input type="text" name="perpage" size="5" value="<?php echo $result["perpage"]; ?>" /><span>The number of announcements to display per page</span><br />
-            
+
             <label>Announcements Per Widget</label>
             <input type="text" name="widgetlimit" size="5" value="<?php echo $result["widgetlimit"]; ?>" /><span>The number of announcements to display on the widget</span><br />
         </fieldset>
-        
+
         <input type="submit" value="Update Settings" class="button-primary" />
-    
+
     </form>
 </div>
 

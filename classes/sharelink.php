@@ -2,17 +2,17 @@
 
 /**
  * Share Link Wordpress Plugin Class
- * 
+ *
  * @author Chris Darby
  * @version 1.1
  */
 class ShareLink extends ShareLinkCommon {
 
-    private $location = "http://data.sharelink.com.au/";
+    private $location = SHARELINK_SOURCE;
 
     /**
      * Update license details in the settings table
-     * 
+     *
      * @param string $stock Three letter ASX stock code
      * @param string $license MD5 random string supplied by ShareLink
      * @return int
@@ -23,18 +23,18 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Returns an array of current license details from the settings table
-     * 
+     *
      * @return array
      */
     public function getLicenseDetails() {
         $details = $this->resultCurrent("select stock, license from " . $this->prefix . "sharelink_settings limit 1");
-        
+
         return $details;
     }
 
     /**
-     * Generates the url to send to the share link server 
-     * 
+     * Generates the url to send to the share link server
+     *
      * @return string URL including license and domain keys
      */
     public function generateUrl() {
@@ -48,12 +48,12 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Returns the XML feed from the server
-     * 
+     *
      * @return object Simple XML object
      */
     public function feedFromServer() {
         $url = $this->generateUrl();
-      
+
         $json = $this->returnWithCurl($url);
         $json_feed = json_decode($json);
 
@@ -74,7 +74,7 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Return data usin Curl
-     * 
+     *
      * @param type $url
      * @return string
      */
@@ -90,8 +90,8 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Registers Sharelink installation with server
-     * 
-     * @return boolean 
+     *
+     * @return boolean
      */
     public function registerWithServer() {
         $url = $this->generateUrl();
@@ -106,7 +106,7 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Returns a url friendly file name based on the title and date
-     * 
+     *
      * @param string $title The title of the announcement
      * @param string $date MySQL Date Stamp
      * @return string The sanatized URL
@@ -126,10 +126,10 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Adds a downloaded article to the database
-     * 
+     *
      * @param type $title
      * @param type $file
-     * @param type $date 
+     * @param type $date
      * @return boolean
      */
     public function addArticleToDatabase($title, $file, $friendly, $date) {
@@ -137,13 +137,40 @@ class ShareLink extends ShareLinkCommon {
 
         if (!$this->checkIfArticleExists($friendly)) {
             if ($this->downloadFile($file, $destination_path)) {
+
+                ##############################
+                # RECONNECT TO MYSQL SERVER  #
+                # in case it times out after #
+                # a long download            #
+                ##############################
+
+                /*
+                However this MAY not be a good solution because according to the
+                MySQL documentation at http://dev.mysql.com/doc/refman/5.0/en/gone-away.html
+                it says that:
+
+                "Prior to MySQL 5.0.19, even if the reconnect flag in the MYSQL structure is equal to 1, MySQL does not automatically reconnect and re-issue the query as it doesn't know if the server did get the original query or not."
+                */
+
+                # The above problem could POSSIBLY explain
+                # duplicate announcements in the DB
+
+                if( ! mysql_ping() ){
+                    global $wpdb;
+                    $wpdb = new wpdb( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );
+                }
+
+                #################################
+                # INSERT NEW ANNOUNCEMENT TO DB #
+                #################################
+
                 $insert = Array(
                     "title" => $title,
                     "file" => $friendly,
                     "date" => $date
                 );
 
-		
+
                 return $this->createRecord($this->prefix . "sharelink", $insert);
             } else {
                 return false;
@@ -155,7 +182,7 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Download a file from ASX to local location
-     * 
+     *
      * @param string $source
      * @param string $destination
      * @return boolean
@@ -177,12 +204,12 @@ class ShareLink extends ShareLinkCommon {
         return false;
     }
 
-    
+
     /**
      * Creates a numerical value for the given string
-     * 
+     *
      * @param string $string
-     * @return string 
+     * @return string
      */
     public function shuffleString($string) {
         $key = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -204,9 +231,9 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Checks if an article already exists on the clients website
-     * 
+     *
      * @param string $title
-     * @param string $date 
+     * @param string $date
      * @return boolean
      */
     public function checkIfArticleExists($file) {
@@ -221,7 +248,7 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Returns an array of the Share Link settings
-     * 
+     *
      * @return array
      */
     public function getSettings() {
@@ -230,10 +257,10 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Save Share Link settings to database
-     * 
-     * @return int Affected Rows 
+     *
+     * @return int Affected Rows
      */
-    
+
     public function saveSettings() {
         $update = Array(
             "display" => $_POST["display-type"],
@@ -250,7 +277,7 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Returns a list of articles
-     * 
+     *
      * @param int $year
      * @param int $page
      * @return array
@@ -283,9 +310,9 @@ class ShareLink extends ShareLinkCommon {
 
     /**
      * Outputs the formatted display based on the stored settings
-     * 
+     *
      * @param int $year
-     * @param int $page 
+     * @param int $page
      * @return string
      */
     public function displayArticles($year = null, $page = null) {

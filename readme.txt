@@ -3,8 +3,8 @@ Contributors: harmonicnewmedia
 Donate link: http://harmonicnewmedia.com/
 Tags: ASX Announcements, Share price, commodity price, finance, ASX
 Requires at least: 3.0.1
-Tested up to: 3.5
-Stable tag: 1.1.3
+Tested up to: 3.8
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ Visit the [Share Link Website](http://sharelink.com.au/ "Share Link") and contac
 2. The Share Link plugin configuration screen
 
 == Changelog ==
+
+= 1.1.4 =
+* Bug fixes.
 
 = 1.1.3 =
 * Pagination links are more robust based on WP URI configuration

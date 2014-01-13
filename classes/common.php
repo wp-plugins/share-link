@@ -1,7 +1,7 @@
 <?php
 /**
  * Common functions class
- * 
+ *
  * @author Christopher Darby
  * @version 1.0
  */
@@ -111,7 +111,11 @@ class ShareLinkCommon {
      */
     protected function resultCurrent($query) {
         $result = $this->resultArray($query);
-        return $result[0];
+        if (count($result) > 0) {
+            return $result[0];
+        } else {
+            return array();
+        }
     }
 
     /**
@@ -122,7 +126,7 @@ class ShareLinkCommon {
      */
     protected function deleteRecord($table, $conditions) {
         $query = "delete from ".$table;
-        
+
         if (!empty($conditions)) {
             $query .= " where ";
 
