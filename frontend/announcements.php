@@ -36,11 +36,11 @@ function renderTable($options) {
 
     if ($options["byyear"] == 1) {
         $years = renderByYear();
-        if (!isset($_GET["year"])) {
-            $_GET["year"] = $years[0];
+        if (!isset($_GET['sl-year'])) {
+            $_GET['sl-year'] = $years[0];
         }
 
-        $year = $_GET["year"];
+        $year = $_GET['sl-year'];
 
         $start_date = ($year - 1) . "-12-31 11:59:59";
         $end_date = ($year + 1) . "-01-01 00:00:00";
@@ -50,35 +50,35 @@ function renderTable($options) {
         if (strpos($_SERVER["REQUEST_URI"], "section=") !== false) {
             $start = 1;
             $end = 100;
-            
+
             while ($start < $end) {
                 $_SERVER["REQUEST_URI"] = str_replace("&section=".$start,"",$_SERVER["REQUEST_URI"]);
                 $_SERVER["REQUEST_URI"] = str_replace("?section=".$start,"",$_SERVER["REQUEST_URI"]);
-                
+
                 $start++;
             }
         }
-        
+
         if (strpos($_SERVER["REQUEST_URI"], "year=") !== false) {
             foreach ($years as $year) {
-                $_SERVER["REQUEST_URI"] = str_replace("&year=".$year,"",$_SERVER["REQUEST_URI"]);
-                $_SERVER["REQUEST_URI"] = str_replace("?year=".$year,"",$_SERVER["REQUEST_URI"]);
-                
+                $_SERVER["REQUEST_URI"] = str_replace("&sl-year=".$year,"",$_SERVER["REQUEST_URI"]);
+                $_SERVER["REQUEST_URI"] = str_replace("?sl-year=".$year,"",$_SERVER["REQUEST_URI"]);
+
             }
         }
-        
+
         if (strpos($_SERVER["REQUEST_URI"], "?") !== false) {
-            $req = $_SERVER["REQUEST_URI"]."&year=";
+            $req = $_SERVER["REQUEST_URI"]."&sl-year=";
         } else {
-            $req = $_SERVER["REQUEST_URI"]."?year=";
+            $req = $_SERVER["REQUEST_URI"]."?sl-year=";
         }
-        
-        
+
+
         $content .= "<script>function runYear(v) { document.location.href = '".$req."' + v; }</script>";
         $content .= "<select class=\"sl-year\" onchange=\"runYear(this.value)\">";
         foreach ($years as $year) {
             $content .= "<option value=\"" . $year . "\"";
-            if ($year == $_GET["year"]) {
+            if ($year == $_GET['sl-year']) {
                 $content .= " selected=\"selected\"";
             }
             $content .= ">" . $year . "</option>";
@@ -120,11 +120,11 @@ function renderList($options) {
 
     if ($options["byyear"] == 1) {
         $years = renderByYear();
-        if (!isset($_GET["year"])) {
-            $_GET["year"] = $years[0];
+        if (!isset($_GET['sl-year'])) {
+            $_GET['sl-year'] = $years[0];
         }
 
-        $year = $_GET["year"];
+        $year = $_GET['sl-year'];
 
         $start_date = ($year - 1) . "-12-31 11:59:59";
         $end_date = ($year + 1) . "-01-01 00:00:00";
@@ -134,35 +134,35 @@ function renderList($options) {
         if (strpos($_SERVER["REQUEST_URI"], "section=") !== false) {
             $start = 1;
             $end = 100;
-            
+
             while ($start < $end) {
                 $_SERVER["REQUEST_URI"] = str_replace("&section=".$start,"",$_SERVER["REQUEST_URI"]);
                 $_SERVER["REQUEST_URI"] = str_replace("?section=".$start,"",$_SERVER["REQUEST_URI"]);
-                
+
                 $start++;
             }
         }
-        
+
         if (strpos($_SERVER["REQUEST_URI"], "year=") !== false) {
             foreach ($years as $year) {
-                $_SERVER["REQUEST_URI"] = str_replace("&year=".$year,"",$_SERVER["REQUEST_URI"]);
-                $_SERVER["REQUEST_URI"] = str_replace("?year=".$year,"",$_SERVER["REQUEST_URI"]);
-                
+                $_SERVER["REQUEST_URI"] = str_replace("&sl-year=".$year,"",$_SERVER["REQUEST_URI"]);
+                $_SERVER["REQUEST_URI"] = str_replace("?sl-year=".$year,"",$_SERVER["REQUEST_URI"]);
+
             }
         }
-        
+
         if (strpos($_SERVER["REQUEST_URI"], "?") !== false) {
-            $req = $_SERVER["REQUEST_URI"]."&year=";
+            $req = $_SERVER["REQUEST_URI"]."&sl-year=";
         } else {
-            $req = $_SERVER["REQUEST_URI"]."?year=";
+            $req = $_SERVER["REQUEST_URI"]."?sl-year=";
         }
-        
-        
+
+
         $content .= "<script>function runYear(v) { document.location.href = '".$req."' + v; }</script>";
         $content .= "<select class=\"sl-year\" onchange=\"runYear(this.value)\">";
         foreach ($years as $year) {
             $content .= "<option value=\"" . $year . "\"";
-            if ($year == $_GET["year"]) {
+            if ($year == $_GET['sl-year']) {
                 $content .= " selected=\"selected\"";
             }
             $content .= ">" . $year . "</option>";
@@ -178,17 +178,17 @@ function renderList($options) {
     if (isset($options["bymonth"]) && $options["bymonth"]!=0) {
         $month = "";
     }
-    
+
     while ($result = mysql_fetch_array($get)) {
         if (isset($options["bymonth"]) && $options["bymonth"]!=0) {
            $current = date($options["monthheader"], strtotime($result["date"]));
-           
+
            if ($current != $month) {
                $content .= "<li class=\"sl-month\">".$current."</li>";
                $month = $current;
            }
         }
-        
+
         $content .= "<li>";
         $content .= "<span class=\"sl-date\">" . date($options["dateformat"], strtotime($result["date"])) . "</span> ";
         $content .= "<span class=\"sl-title\"><a target=\"_new\" href=\"" . WP_CONTENT_URL . "/sharelink/" . $result["file"] . "\">" . $result["title"] . "</a></span>";
@@ -259,21 +259,12 @@ function renderPagination($total, $page, $byyear) {
     $_SERVER["REQUEST_URI"] = rtrim($_SERVER["REQUEST_URI"], '/');
 
     if (strpos($_SERVER["REQUEST_URI"], "?section=") !== false) {
-        $start = 0;
-        while ($start < $pages) {
-            $_SERVER["REQUEST_URI"] = str_replace("?section=" . ($start + 1), "", $_SERVER["REQUEST_URI"]);
-            $start++;
-        }
+        $_SERVER["REQUEST_URI"] = preg_replace("/\?section=[0-9]+/", "", $_SERVER["REQUEST_URI"]);
         $sep = "?";
     }
 
     if (strpos($_SERVER["REQUEST_URI"], "&section=") !== false) {
-        $start = 0;
-        while ($start < $pages) {
-            $_SERVER["REQUEST_URI"] = str_replace("&section=" . ($start + 1), "", $_SERVER["REQUEST_URI"]);
-            $start++;
-        }
-
+        $_SERVER["REQUEST_URI"] = preg_replace("/\&section=[0-9]+/", "", $_SERVER["REQUEST_URI"]);
         $sep = "&";
     }
 
@@ -281,22 +272,22 @@ function renderPagination($total, $page, $byyear) {
     if ($byyear == 1) {
         $years = renderByYear();
 
-        if (strpos($_SERVER["REQUEST_URI"], "?year=") !== false) {
+        if (strpos($_SERVER["REQUEST_URI"], "?sl-year=") !== false) {
             foreach ($years as $year) {
-                $_SERVER["REQUEST_URI"] = str_replace("?year=" . $year, "", $_SERVER["REQUEST_URI"]);
+                $_SERVER["REQUEST_URI"] = str_replace("?sl-year=" . $year, "", $_SERVER["REQUEST_URI"]);
             }
         }
 
-        if (strpos($_SERVER["REQUEST_URI"], "&year=") !== false) {
+        if (strpos($_SERVER["REQUEST_URI"], "&sl-year=") !== false) {
             foreach ($years as $year) {
-                $_SERVER["REQUEST_URI"] = str_replace("&year=" . $year, "", $_SERVER["REQUEST_URI"]);
+                $_SERVER["REQUEST_URI"] = str_replace("&sl-year=" . $year, "", $_SERVER["REQUEST_URI"]);
             }
         }
 
-        if (!isset($_GET["year"])) {
-            $yr = "&year=" . $years[0];
+        if (!isset($_GET['sl-year'])) {
+            $yr = "&sl-year=" . $years[0];
         } else {
-            $yr = "&year=" . $_GET["year"];
+            $yr = "&sl-year=" . $_GET['sl-year'];
         }
     } else {
         $yr = "";
@@ -308,11 +299,28 @@ function renderPagination($total, $page, $byyear) {
 	    $_SERVER["REQUEST_URI"] = str_replace("&","?",$_SERVER["REQUEST_URI"]);
 	}
 
+    $current_page = 1;
+    if (isset($_GET['section'])) {
+        $current_page = (int)$_GET['section'];
+
+        if ($current_page > $pages || $current_page < 1) {
+            $current_page = 1;
+        }
+    }
+
 
     $start = 0;
+    if (!isset($content)) {
+        $content = "";
+    }
     $content .= "<div class=\"sl-pagination\">";
     while ($start < $pages) {
-        $content .= "<a href=\"" . $_SERVER["REQUEST_URI"] . "" . $sep . "section=" . ($start + 1) . "" . $yr . "\">" . ($start + 1) . "</a> &nbsp;";
+        $is_active = $current_page == ($start + 1);
+        $content .= "<a ";
+        if ($is_active) {
+            $content .= 'class="active" ';
+        }
+        $content .= "href=\"" . $_SERVER["REQUEST_URI"] . "" . $sep . "section=" . ($start + 1) . "" . $yr . "\">" . ($start + 1) . "</a> &nbsp;";
         $start++;
     }
     $content .= "</div>";
