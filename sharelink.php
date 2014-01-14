@@ -5,7 +5,7 @@
   Plugin URI: http://www.sharelink.com.au
   Description: Share Link wordpress plugin
   Author: Harmonic New Media
-  Version: 1.1.2
+  Version: 1.1.4
   Author URI: http://www.harmonicnewmedia.com
  */
 
