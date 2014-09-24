@@ -5,7 +5,7 @@
   Plugin URI: http://www.sharelink.com.au
   Description: Share Link wordpress plugin
   Author: Harmonic New Media
-  Version: 1.1.4
+  Version: 1.1.2
   Author URI: http://www.harmonicnewmedia.com
  */
 
@@ -28,9 +28,9 @@ function installShareLink() {
     $options_table = "create table if not exists " . $wpdb->prefix . "sharelink_options (id int not null auto_increment, widgetlimit int, widgetdate char(10), byyear int, bymonth int, dateformat varchar(20), pagination int, perpage int, monthheader varchar(20), display int, primary key(id))";
     $documents_table = "create table if not exists " . $wpdb->prefix . "sharelink (id int not null auto_increment, created timestamp not null default current_timestamp, date datetime, title varchar(200), file varchar(200), primary key(id))";
 
-    mysql_query($settings_table);
-    mysql_query($options_table);
-    mysql_query($documents_table);
+    $wpdb->query($settings_table);
+    $wpdb->query($options_table);
+    $wpdb->query($documents_table);
 
     $directory = WP_CONTENT_DIR . "/sharelink";
     if (!file_exists($directory)) {
@@ -53,18 +53,24 @@ if (is_admin()) {
 
             $result = file_get_contents($url);
 
-            $json = json_decode($result);
-            $level = "";
+            if ($result === false) {
+                echo "<div class=\"error\">There was an error checking the license. Please try again later.</div>";
+            } else {
+                $json = json_decode($result);
+                $level = "";
 
-            if (isset($json->has_announcements)) {
-                $level = "bronze";
-            } else if (isset($json->has_graph) && !isset($json->has_announcements)) {
-                $level = "silver";
-            } else if (!isset($json->has_graph) && !isset($json->has_announcements) && isset($json->has_share)) {
-                $level = "gold";
+                if (isset($json->has_announcements)) {
+                    $level = "bronze";
+                } else if (isset($json->has_graph) && !isset($json->has_announcements)) {
+                    $level = "silver";
+                } else if (!isset($json->has_graph) && !isset($json->has_announcements) && isset($json->has_share)) {
+                    $level = "gold";
+                }
+
+                installShareLink();
+
+                $wpdb->query("insert into ".$wpdb->prefix."sharelink_settings (stock,license,level,status) values ('".$json->symbol."','".$license."','".$level."',1)");
             }
-
-            mysql_query("insert into ".$wpdb->prefix."sharelink_settings (stock,license,level,status) values ('".$json->symbol."','".$license."','".$level."',1)");
         }
     }
 
@@ -72,17 +78,11 @@ if (is_admin()) {
     function is_installed() {
         global $wpdb;
 
-        $num = 0;
-        $get = mysql_query("select id from ".$wpdb->prefix."sharelink_settings limit 1");
-        if ($get !== false) {
-            $num = mysql_num_rows($get);
-        }
+        $wpdb->hide_errors();
+        $num = $wpdb->get_var("select count(*) from ".$wpdb->prefix."sharelink_settings limit 1");
+        $wpdb->show_errors();
 
-        if ($num == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !is_null($num);
     }
 
     function sharelink_launch() {
