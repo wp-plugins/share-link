@@ -3,16 +3,16 @@ Contributors: harmonicnewmedia
 Donate link: http://harmonicnewmedia.com/
 Tags: ASX Announcements, Share price, commodity price, finance, ASX
 Requires at least: 3.0.1
-Tested up to: 3.8
-Stable tag: 1.1.4
+Tested up to: 4.0
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automatically manage the addition of ASX Announcements to your website via the Share Link Wordpress plug-in. 
+Automatically manage the addition of ASX Announcements to your website via the Share Link Wordpress plug-in.
 
 == Description ==
 
-Automatically manage the addition of ASX Announcements to your website via the Share Link Wordpress plug-in. 
+Automatically manage the addition of ASX Announcements to your website via the Share Link Wordpress plug-in.
 
 Share Link is a subscription service that includes the ability to display share prices, commodity prices, graphs and automatically upload ASX Announcements to your website.
 
@@ -50,8 +50,14 @@ Visit the [Share Link Website](http://sharelink.com.au/ "Share Link") and contac
 
 == Changelog ==
 
+= 1.1.6 =
+* Bug fix for installed state detection.
+
+= 1.1.5 =
+* Updates to make it work with Wordpress 4.0.
+
 = 1.1.4 =
-* Bug fixes.
+* Adjustments for announcement downloads.
 
 = 1.1.3 =
 * Pagination links are more robust based on WP URI configuration

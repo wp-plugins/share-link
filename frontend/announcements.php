@@ -6,8 +6,7 @@ function renderAnnouncements($content) {
     $data = "";
 
     global $wpdb;
-    $get = mysql_query("select * from " . $wpdb->prefix . "sharelink_options limit 1");
-    $result = mysql_fetch_array($get);
+    $result = $wpdb->get_row("select * from " . $wpdb->prefix . "sharelink_options limit 1", ARRAY_A);
 
     $data = "";
     if ($result["display"] == 0) {
@@ -88,10 +87,9 @@ function renderTable($options) {
         $year_limit = "";
     }
 
+    $results = $wpdb->get_results("select * from " . $wpdb->prefix . "sharelink " . $year_limit . " order by date desc, id desc" . getLimits($options["pagination"], $options["perpage"]), ARRAY_A);
 
-    $get = mysql_query("select * from " . $wpdb->prefix . "sharelink " . $year_limit . " order by date desc" . getLimits($options["pagination"], $options["perpage"]));
-
-    while ($result = mysql_fetch_array($get)) {
+    foreach ($results as $result) {
         $content .= "<tr>";
         $content .= "<td>" . date($options["dateformat"], strtotime($result["date"])) . "</td>";
         $content .= "<td>" . $result["title"] . "</td>";
@@ -103,7 +101,8 @@ function renderTable($options) {
     $content .= "</table>";
 
     if ($options["pagination"] == 1) {
-        $content .= renderPagination(mysql_num_rows(mysql_query("select * from " . $wpdb->prefix . "sharelink $year_limit")), $options["perpage"], $options["byyear"]);
+        $total = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "sharelink $year_limit" );
+        $content .= renderPagination($total, $options["perpage"], $options["byyear"]);
     }
 
     $content .= "</div>";
@@ -172,14 +171,13 @@ function renderList($options) {
         $year_limit = "";
     }
 
-
-    $get = mysql_query("select * from " . $wpdb->prefix . "sharelink " . $year_limit . " order by date desc" . getLimits($options["pagination"], $options["perpage"]));
+    $results = $wpdb->get_results("select * from " . $wpdb->prefix . "sharelink " . $year_limit . " order by date desc" . getLimits($options["pagination"], $options["perpage"]), ARRAY_A);
 
     if (isset($options["bymonth"]) && $options["bymonth"]!=0) {
         $month = "";
     }
 
-    while ($result = mysql_fetch_array($get)) {
+    foreach ($results as $result) {
         if (isset($options["bymonth"]) && $options["bymonth"]!=0) {
            $current = date($options["monthheader"], strtotime($result["date"]));
 
@@ -198,7 +196,8 @@ function renderList($options) {
     $content .= "</ul>";
 
     if ($options["pagination"] == 1) {
-        $content .= renderPagination(mysql_num_rows(mysql_query("select * from " . $wpdb->prefix . "sharelink $year_limit")), $options["perpage"], $options["byyear"]);
+        $total = $wpdb->get_var( "select count(*) from " . $wpdb->prefix . "sharelink $year_limit" );
+        $content .= renderPagination($total, $options["perpage"], $options["byyear"]);
     }
 
     $content .= "</div>";
@@ -233,13 +232,17 @@ function renderByYear() {
 
     $years = Array();
 
-    $get = mysql_query("select * from " . $wpdb->prefix . "sharelink order by date desc");
-    while ($result = mysql_fetch_array($get)) {
+    $results = $wpdb->get_results("select * from " . $wpdb->prefix . "sharelink order by date desc", ARRAY_A);
+    foreach ($results as $result) {
         $year = date("Y", strtotime($result["date"]));
 
         if (!in_array($year, $years)) {
             $years[] = $year;
         }
+    }
+
+    if (count($years) == 0) {
+        $years[] = date('Y');
     }
 
     return $years;
