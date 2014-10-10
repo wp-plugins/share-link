@@ -4,7 +4,7 @@ Donate link: http://harmonicnewmedia.com/
 Tags: ASX Announcements, Share price, commodity price, finance, ASX
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ Visit the [Share Link Website](http://sharelink.com.au/ "Share Link") and contac
 2. The Share Link plugin configuration screen
 
 == Changelog ==
+
+= 1.1.6 =
+* Bug fix for installed state detection.
 
 = 1.1.5 =
 * Updates to make it work with Wordpress 4.0.
