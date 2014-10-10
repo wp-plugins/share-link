@@ -82,7 +82,7 @@ if (is_admin()) {
         $num = $wpdb->get_var("select count(*) from ".$wpdb->prefix."sharelink_settings limit 1");
         $wpdb->show_errors();
 
-        return !is_null($num);
+        return $num != 0;
     }
 
     function sharelink_launch() {
