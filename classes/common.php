@@ -25,14 +25,9 @@ class ShareLinkCommon {
      * @return array
      */
     protected function resultArray($query) {
-        $get = mysql_query($query);
-        $return = Array();
+        global $wpdb;
 
-        while ($result = mysql_fetch_assoc($get)) {
-            $return[] = $result;
-        }
-
-        return $return;
+        return $wpdb->get_results($query, ARRAY_A);
     }
 
     /**
@@ -44,34 +39,9 @@ class ShareLinkCommon {
      * @return array
      */
     protected function updateRecord($table, $data, $conditions = null) {
-        $query = " update " . $table . " set ";
+        global $wpdb;
 
-        foreach ($data as $key => $val) {
-            $query .= " $key = '" . addslashes($val) . "', ";
-        }
-
-        $query = substr($query, 0, strlen($query) - 1);
-
-        if (!empty($conditions)) {
-            $query .= " where ";
-
-            foreach ($conditions as $key => $val) {
-                if (strpos($key, "like") !== false) {
-                    $query .= $key . " '" . addslashes($val) . "',";
-                } else if (strpos($key, "like") !== false) {
-                    $query .= $key . " '" . addslashes($val) . "',";
-                } else if (strpos($key, "like") !== false) {
-                    $query .= $key . " '" . addslashes($val) . "',";
-                } else {
-                    $query .= $key . " = '" . addslashes($val) . "',";
-                }
-            }
-
-            $query = substr($query, 0, strlen($query) - 1);
-        }
-
-        @mysql_query($query);
-        return mysql_affected_rows();
+        return $wpdb->update($table, $data, $conditions);
     }
 
     /**
@@ -82,25 +52,11 @@ class ShareLinkCommon {
      * @return array
      */
     protected function createRecord($table, $data) {
-        $query = " insert into " . $table . " (";
+        global $wpdb;
 
-        foreach ($data as $key => $val) {
-            $query .= $key . ",";
-        }
+        $wpdb->insert($table, $data);
 
-        $query = substr($query, 0, strlen($query) - 1);
-
-        $query .= ") values (";
-
-        foreach ($data as $key => $val) {
-            $query .= "'" . addslashes($val) . "',";
-        }
-
-        $query = substr($query, 0, strlen($query) - 1);
-        $query .= ")";
-
-        @mysql_query($query);
-        return mysql_insert_id();
+        return $wpdb->insert_id;
     }
 
     /**
@@ -125,28 +81,9 @@ class ShareLinkCommon {
      * @return array
      */
     protected function deleteRecord($table, $conditions) {
-        $query = "delete from ".$table;
+        global $wpdb;
 
-        if (!empty($conditions)) {
-            $query .= " where ";
-
-            foreach ($conditions as $key => $val) {
-                if (strpos($key, "like") !== false) {
-                    $query .= $key . " '" . addslashes($val) . "',";
-                } else if (strpos($key, "like") !== false) {
-                    $query .= $key . " '" . addslashes($val) . "',";
-                } else if (strpos($key, "like") !== false) {
-                    $query .= $key . " '" . addslashes($val) . "',";
-                } else {
-                    $query .= $key . " = '" . addslashes($val) . "',";
-                }
-            }
-
-            $query = substr($query, 0, strlen($query) - 1);
-        }
-
-        @mysql_query($query);
-        return mysql_affected_rows();
+        return $wpdb->delete($table, $conditions);
     }
 
 }

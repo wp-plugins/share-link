@@ -15,27 +15,21 @@
             $widgetdate = $_POST["widgetdate"];
             $widgetlimit = $_POST["widgetlimit"];
 
-            $check = mysql_query("select * from ".$wpdb->prefix."sharelink_options");
-	    $result = mysql_num_rows($check);
-            if ($result == 0) {
-		mysql_query("insert into ".$wpdb->prefix."sharelink_options (id) values (1)");
-	    }
-            mysql_query("update ".$wpdb->prefix."sharelink_options set widgetlimit = '".$widgetlimit."', widgetdate = '".$widgetdate."', byyear = '".$byyear."', dateformat = '".$dateformat."', bymonth = '".$bymonth."', display = '".$display."', monthheader = '".$monthheader."', perpage = '".$perpage."', pagination = '".$pagination."'");
-
-echo mysql_error();
+            $options = $wpdb->get_results("select * from ".$wpdb->prefix."sharelink_options");
+            if (count($options) == 0) {
+                $wpdb->query("insert into ".$wpdb->prefix."sharelink_options (id) values (1)");
+            }
+            $wpdb->query("update ".$wpdb->prefix."sharelink_options set widgetlimit = '".$widgetlimit."', widgetdate = '".$widgetdate."', byyear = '".$byyear."', dateformat = '".$dateformat."', bymonth = '".$bymonth."', display = '".$display."', monthheader = '".$monthheader."', perpage = '".$perpage."', pagination = '".$pagination."'");
 
             echo "<div class=\"updated\">Settings have been saved</div>";
         }
 
-        $get = mysql_query("select * from ".$wpdb->prefix."sharelink_options limit 1");
-        $num = mysql_num_rows($get);
+        $result = $wpdb->get_row("select * from ".$wpdb->prefix."sharelink_options limit 1", ARRAY_A);
 
-        if ($num == 0) {
-            mysql_query("insert into ".$wpdb->prefix."sharelink_options (widgetlimit,widgetdate,byyear,bymonth,display,pagination,monthheader,dateformat,perpage) values (3,'d/m/Y',0,0,0,0,0,'d/m/Y',10)");
-            $get = mysql_query("select * from ".$wpdb->prefix."sharelink_options limit 1");
+        if (count($result) == 0) {
+            $wpdb->query("insert into ".$wpdb->prefix."sharelink_options (widgetlimit,widgetdate,byyear,bymonth,display,pagination,monthheader,dateformat,perpage) values (3,'d/m/Y',0,0,0,0,0,'d/m/Y',10)");
+            $result = $wpdb->get_row("select * from ".$wpdb->prefix."sharelink_options limit 1", ARRAY_A);
         }
-
-        $result = mysql_fetch_array($get);
 
     ?>
 

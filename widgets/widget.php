@@ -26,7 +26,7 @@ class SharelinkWidget extends WP_Widget {
         $instance = wp_parse_args((array) $instance, array('title' => ''));
         $title = $instance['title'];
 
-        echo $form;
+        // echo $form;
     }
 
     /**
@@ -67,14 +67,11 @@ class SharelinkWidget extends WP_Widget {
 
 
         global $wpdb;
-        $get = mysql_query("select * from ".$wpdb->prefix."sharelink_options limit 1");
-        $options = mysql_fetch_array($get);
+        $options = $wpdb->get_row("select * from ".$wpdb->prefix."sharelink_options limit 1", ARRAY_A);
 
-        $get = mysql_query("select * from " . $wpdb->prefix . "sharelink order by date desc limit ".$options["widgetlimit"]);
+        $results = $wpdb->get_results("select * from " . $wpdb->prefix . "sharelink order by date desc, id desc limit ".$options["widgetlimit"], ARRAY_A);
 
-        while ($result = mysql_fetch_array($get)) {
-
-
+        foreach ($results as $result) {
             $content .= "<li>";
             $content .= "<span class=\"sl-date\">" . date($options["widgetdate"], strtotime($result["date"])) . "</span> ";
             $content .= "<span class=\"sl-title\"><a target=\"_new\" href=\"" . WP_CONTENT_URL . "/sharelink/" . $result["file"] . "\">" . $result["title"] . "</a></span>";
