@@ -114,7 +114,7 @@ class ShareLink extends ShareLinkCommon {
     private function createUrlFriendlyFilename($title, $date, $file) {
         $date = date("Ymd", strtotime($date));
         $string = str_replace(" ", "-", $title);
-        $string = ereg_replace("[^A-Za-z0-9-]", "", $string);
+        $string = preg_replace("/[^-A-Za-z0-9]/", "", $string);
         $string = strtolower($string);
 
         $arr = explode("/", $file);
@@ -137,28 +137,6 @@ class ShareLink extends ShareLinkCommon {
 
         if (!$this->checkIfArticleExists($friendly)) {
             if ($this->downloadFile($file, $destination_path)) {
-
-                ##############################
-                # RECONNECT TO MYSQL SERVER  #
-                # in case it times out after #
-                # a long download            #
-                ##############################
-
-                /*
-                However this MAY not be a good solution because according to the
-                MySQL documentation at http://dev.mysql.com/doc/refman/5.0/en/gone-away.html
-                it says that:
-
-                "Prior to MySQL 5.0.19, even if the reconnect flag in the MYSQL structure is equal to 1, MySQL does not automatically reconnect and re-issue the query as it doesn't know if the server did get the original query or not."
-                */
-
-                # The above problem could POSSIBLY explain
-                # duplicate announcements in the DB
-
-                if( ! mysql_ping() ){
-                    global $wpdb;
-                    $wpdb = new wpdb( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );
-                }
 
                 #################################
                 # INSERT NEW ANNOUNCEMENT TO DB #
@@ -237,7 +215,7 @@ class ShareLink extends ShareLinkCommon {
      * @return boolean
      */
     public function checkIfArticleExists($file) {
-        $result = $this->resultCurrent("select id from " . $this->prefix . "sharelink where file = '" . $file . "'");
+        $result = $this->resultCurrent("select id from " . $this->prefix . "sharelink where file = '" . addslashes($file) . "'");
 
         if (!empty($result)) {
             return true;
