@@ -56,8 +56,11 @@ if (isset($_GET["download-sharelink"])) {
 </rss>';
 
     // Write out to the cache.
-    // $rss_cache = WP_CONTENT_DIR . "/sharelink/announcements.xml";
-    // file_put_contents($rss_cache, $rss_body);
+    $doWritePath = WP_CONTENT_DIR . "/sharelink/do-announcements.txt";
+    if (file_exists($doWritePath)) {
+        $rss_cache = WP_CONTENT_DIR . "/sharelink/announcements.xml";
+        file_put_contents($rss_cache, $rss_body);
+    }
 
     die("Download complete");
 }
