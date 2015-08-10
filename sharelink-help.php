@@ -16,36 +16,38 @@
 
     <table width="100%">
     <tr>
-        <td><strong>Short Tag</strong></td>
-        <td><strong>Description</strong></td>
-        <td><strong>Example</strong></td>
+    	<td><strong>Short Tag</strong></td>
+    	<td><strong>Description</strong></td>
+    	<td><strong>Example</strong></td>
     </tr>
     <tr>
-        <td>*[sharelink-box]</td>
-        <td>Displays the stock code, price and movement in the standard Share Link box/vertical style</td>
-        <td><img src="<?php echo plugins_url('images/sl-box-example.png', __FILE__); ?>" /></td>
+    	<td>*[sharelink-box]</td>
+    	<td>Displays the stock code, price and movement in the standard Share Link box/vertical style</td>
+    	<td><img src="<?php echo plugins_url('images/sl-box-example.png', __FILE__); ?>" /></td>
     </tr>
     <tr>
-        <td>[sharelink-strip]</td>
-        <td>Displays the stock code, price and movement in a horizontal or strip format</td>
-        <td><img src="<?php echo plugins_url('images/sl-strip-example.png', __FILE__); ?>" /></td>
+    	<td>[sharelink-strip]</td>
+    	<td>Displays the stock code, price and movement in a horizontal or strip format</td>
+    	<td><img src="<?php echo plugins_url('images/sl-strip-example.png', __FILE__); ?>" /></td>
     </tr>
     <tr>
-        <td>[sharelink-table]</td>
-        <td>Displays a complete list of all stock prices, commodities and exchange rates in a table</td>
-        <td><img src="<?php echo plugins_url('images/sl-multi-example.png', __FILE__); ?>" /></td>
+    	<td>[sharelink-table]</td>
+    	<td>Displays a complete list of all stock prices, commodities and exchange rates in a table</td>
+    	<td><img src="<?php echo plugins_url('images/sl-multi-example.png', __FILE__); ?>" /></td>
     </tr>
     <tr>
-        <td>[sharelink-graph CODE]</td>
-        <td>Displays a graph of the share price of the code selected. <br />
-            <i>Usage: [sharelink-graph CODE] - Displays the graph for code CODE</i>
-        </td>
-        <td><img src="<?php echo plugins_url('images/sl-graph-example.png', __FILE__); ?>" /></td>
+    	<td>[sharelink-graph]</td>
+    	<td>Displays a graph of the share price (default) or of the code selected if parameter is present. <br />
+    		<i>Usage: [sharelink-graph] - Displays the default graph<br />
+    		[sharelink-graph ENT] - Displays the graph for the ENT stock code rather than the default. Note this requires mutliple stock codes to be set up in your account.</i>
+    	</td>
+    	<td><img src="<?php echo plugins_url('images/sl-graph-example.png', __FILE__); ?>" /></td>
     </tr>
     <tr>
-        <td>[sharelink-graph-3 CODE]</td>
-        <td>Displays a graph of the share price of the code selected. Uses the version 3 renderer. <br />
-            <i>Usage: [sharelink-graph-3] - Displays the graph for code CODE</i>
+        <td>[sharelink-graph-3]</td>
+        <td>Displays a graph of the share price (default) or of the code selected if parameter is present. Uses the version 3 renderer. <br />
+            <i>Usage: [sharelink-graph-3] - Displays the default graph<br />
+            [sharelink-graph-3 ENT] - Displays the graph for the ENT stock code rather than the default. Note this requires mutliple stock codes to be set up in your account.</i>
         </td>
         <td><img src="<?php echo plugins_url('images/sl-graph-3-example.png', __FILE__); ?>" /></td>
     </tr>
