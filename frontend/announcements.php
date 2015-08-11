@@ -1,8 +1,8 @@
 <?php
 
-add_filter('the_content', 'renderAnnouncements');
+add_filter('the_content', 'sharelinkRenderAnnouncementsFilterContent');
 
-function renderAnnouncements($content) {
+function renderAnnouncements() {
     $data = "";
 
     global $wpdb;
@@ -15,8 +15,22 @@ function renderAnnouncements($content) {
         $data = renderList($result);
     }
 
-    return str_replace("[sharelink-asx]", $data, $content);
+    return $data;
 }
+
+function sharelinkRenderAnnouncementsFilterContent($content) {
+    if (strpos($content, '[sharelink-asx]') !== false) {
+        return str_replace("[sharelink-asx]", renderAnnouncements(), $content);
+    } else {
+        return $content;
+    }
+}
+
+function sharelinkAnnouncementsShortcode($atts) {
+    return renderAnnouncements();
+}
+
+add_shortcode( 'sharelink-asx', 'sharelinkAnnouncementsShortcode' );
 
 function renderTable($options) {
     $content = "";
